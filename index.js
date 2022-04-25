@@ -13,6 +13,11 @@ const getFormattedTime = () => {
     return `${date[1]} ${date[0]}, ${time}`;
 }
 
+const sep = (amount) => {
+    amount = parseInt(amount);
+    return amount.toLocaleString();
+}
+
 document.querySelector("#ewallet-form")
     .addEventListener('submit',
         (e) => {
@@ -69,7 +74,7 @@ const addItems = (type, desc, value) => {
                 </div>
               </div>
               <div class="item-amount ${type === '+' ? 'income-amount' : 'expense-amount'}">
-                <p>${type}$${value}</p>
+                <p>${type}$${sep(value)}</p>
               </div>
             </div>       
             `
@@ -127,7 +132,7 @@ const showTotalIncome = () => {
     }
 
     console.log(totalIncome);
-    document.querySelector('.income__amount p').innerText = `$${totalIncome}`;
+    document.querySelector('.income__amount p').innerText = `$${sep(totalIncome)}`;
 }
 
 showTotalIncome();
@@ -142,7 +147,7 @@ const showTotalExpense = () => {
         }
     }
     console.log(totalExpense)
-    document.querySelector('.expense__amount p').innerText = `$${totalExpense}`;
+    document.querySelector('.expense__amount p').innerText = `$${sep(totalExpense)}`;
 }
 
 showTotalExpense();
@@ -157,9 +162,10 @@ const showTotalBalance = () => {
             balance -= parseInt(item.value);
         }
     }
-    document.querySelector('.balance__amount p').innerText = `$${balance}`;
+    document.querySelector('.balance__amount p').innerText = sep(balance);
 
     document.querySelector('header').className = (balance >= 0) ? 'green' : 'red';
 }
 
 showTotalBalance();
+
