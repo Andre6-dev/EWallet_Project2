@@ -29,6 +29,31 @@ document.querySelector("#ewallet-form")
             }
 });
 
+function showItems() {
+    let items = getItemsFromLS();
+
+    const collection = document.querySelector('.collection');
+
+    for (let item of items) {
+        const newHtml = `
+            <div class="item">
+              <div class="item-description-time">
+                <div class="item-description">
+                  <p>${item.desc}</p>
+                </div>
+                <div class="item-time">
+                  <p>${item.time}</p>
+                </div>
+              </div>
+              <div class="item-amount ${item.type === '+' ? 'income-amount' : 'expense-amount'}">
+                <p>${item.type}$${item.value}</p>
+              </div>
+            </div>       
+            `;
+        collection.insertAdjacentHTML('afterbegin', newHtml);
+    }
+}
+
 const addItems = (type, desc, value) => {
 
     const time = getFormattedTime();
@@ -53,6 +78,10 @@ const addItems = (type, desc, value) => {
     collection.insertAdjacentHTML('afterbegin', newHtml);
 
     addItemToLS(type, desc, value, time);
+
+    showTotalIncome();
+    showTotalExpense();
+    showTotalBalance();
 }
 
 const resetForm = () => {
@@ -85,3 +114,52 @@ const addItemToLS = (type, desc, value, time) => {
     localStorage.setItem('items', JSON.stringify(items));
 };
 
+showItems();
+
+const showTotalIncome = () => {
+    let items = getItemsFromLS();
+    let totalIncome = 0;
+
+    for (let item of items) {
+        if (item.type === '+') {
+            totalIncome += parseInt(item.value);
+        }
+    }
+
+    console.log(totalIncome);
+    document.querySelector('.income__amount p').innerText = `$${totalIncome}`;
+}
+
+showTotalIncome();
+
+const showTotalExpense = () => {
+    let items = getItemsFromLS();
+    let totalExpense = 0;
+
+    for (let item of items) {
+        if (item.type === '-') {
+            totalExpense += parseInt(item.value)
+        }
+    }
+    console.log(totalExpense)
+    document.querySelector('.expense__amount p').innerText = `$${totalExpense}`;
+}
+
+showTotalExpense();
+
+const showTotalBalance = () => {
+    let items = getItemsFromLS();
+    let balance = 0;
+    for (let item of items) {
+        if (item.type === '+') {
+            balance += parseInt(item.value);
+        } else {
+            balance -= parseInt(item.value);
+        }
+    }
+    document.querySelector('.balance__amount p').innerText = `$${balance}`;
+
+    document.querySelector('header').className = (balance >= 0) ? 'green' : 'red';
+}
+
+showTotalBalance();
