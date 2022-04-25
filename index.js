@@ -49,8 +49,10 @@ const addItems = (type, desc, value) => {
             </div>       
             `
 
-    const collection = document.querySelector('.collection')
-    collection.insertAdjacentHTML('afterbegin', newHtml)
+    const collection = document.querySelector('.collection');
+    collection.insertAdjacentHTML('afterbegin', newHtml);
+
+    addItemToLS(type, desc, value, time);
 }
 
 const resetForm = () => {
@@ -58,4 +60,28 @@ const resetForm = () => {
     document.querySelector('.add__description').value = '';
     document.querySelector('.add__value').value = '';
 }
+
+const getItemsFromLS = () => {
+    let items = localStorage.getItem('items');
+
+    if (items) {
+        items = JSON.parse(items);
+    } else {
+        items = []
+    }
+    return items;
+}
+
+const addItemToLS = (type, desc, value, time) => {
+
+    let items = getItemsFromLS();
+    items.push({
+        desc: desc,
+        time: time,
+        type: type,
+        value: value,
+    })
+
+    localStorage.setItem('items', JSON.stringify(items));
+};
 
